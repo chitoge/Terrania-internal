@@ -2,6 +2,9 @@
 from questions import *
 import random
 
+def load_flag(country):
+    return ''
+
 class RandomMultiChoiceGenerator:
     def __init__(self, previous_answers, candidates, language, data_tag, generator_tag, answer_gen_fn):
         self.language = language
@@ -87,3 +90,10 @@ class Country2CapitalGenerator(BaseQuestionGenerator):
         # TODO: apply i18n & load image
         q = 'What is the capital of %s?' % question.choices[question.correct_answer].name
         return dict(question=dict(type='text', data=q), answers=[dict(type='text', data=c.capital) for c in question.choices])
+
+generators = {
+    'flag2country': Flag2CountryGenerator,
+    'country2flag': Country2FlagGenerator,
+    'capital2country': Capital2CountryGenerator,
+    'country2capital': Country2CapitalGenerator,
+}
