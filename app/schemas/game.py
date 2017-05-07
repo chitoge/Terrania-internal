@@ -2,10 +2,8 @@
 from ..models.game import Game
 from marshmallow import fields, validates
 
-class GameSchema(ma.ModelSchema):
-
-    class Meta:
-        model = Game
+class GameSchema(ma.Schema):
+    hashed_id = fields.Str()
 
 class DataTypeSchema(ma.Schema):
     type = fields.Str(required=True)

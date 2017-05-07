@@ -4,12 +4,14 @@ from ..core.question_generators import generators
 
 # internal data
 class Country(db.Model):
-    name = db.Column(db.Unicode, unique=True)
+    i18n_name_id = db.Column(db.Integer, db.ForeignKey('translations.id'))
+    i18n_name = db.relationship("Translation", foreign_keys=[i18n_name_id])
     region = db.Column(db.String)
     country_code = db.Column(db.String, primary_key=True)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
-    capital = db.Column(db.Unicode)
+    i18n_capital_id = db.Column(db.Integer, db.ForeignKey('translations.id'))
+    i18n_capital = db.relationship("Translation", foreign_keys=[i18n_capital_id])
     population = db.Column(db.Integer)
     area = db.Column(db.Integer)
     coastline = db.Column(db.Integer)
@@ -20,12 +22,12 @@ class Country(db.Model):
     life_expectancy = db.Column(db.Float)
 
     def __init__(self, name, region, country_code, latitude, longitude, capital, population, area, coastline, currency, dialing_prefix, birth_rate, death_rate, life_expectancy):
-        self.name = name
+        self.i18n_name = name
         self.region = region
         self.country_code = country_code
         self.latitude = latitude
         self.longitude = longitude
-        self.capital = capital
+        self.i18n_capital = capital
         self.population = population
         self.area = area
         self.coastline = coastline
@@ -36,7 +38,7 @@ class Country(db.Model):
         self.life_expectancy = life_expectancy
 
     def __repr__(self):
-        return 'Country {}'.format(self.country_code)
+        return '<Country {}>'.format(self.country_code)
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -66,7 +68,7 @@ class Game(db.Model):
         self.past_countries = []
 
     def __repr__(self):
-        return 'Game {}>'.format(self.id)
+        return '<Game {}>'.format(self.id)
 
     def next_question(self):
         # if we generated enough questions then stop

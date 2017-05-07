@@ -44,7 +44,7 @@ def post_new_game():
         res = jsonify({'status': 404, 'message': 'Invalid parameters'})
         res.status_code = 404
         return res
-
+    
 # GET current game question
 @api.route('/games/<string:id>/question', methods=['GET'])
 def get_game_question(id):

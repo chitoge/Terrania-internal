@@ -1,6 +1,7 @@
 ﻿# question generator classes
 from questions import *
 import random
+from ..models.i18n import Translation
 
 def load_flag(country):
     return ''
@@ -28,6 +29,8 @@ class RandomMultiChoiceGenerator:
         choices = random.sample(self.candidates, 4)
         # generate answer from this
         answer = self.answer_gen_fn(choices)
+        # translate choices to chosen language
+        choices = map(lambda x: Translation.translate(x, self.language), choices)
         # return a tuple (question, type of data used)
         return MultiChoiceQuestion(self.generator_tag, choices, answer), self.data_tag
 
@@ -61,7 +64,9 @@ class Country2FlagGenerator(BaseQuestionGenerator):
     def view(self, question):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
-        q = 'What is the flag of %s?' % question.choices[question.correct_answer].name
+        #q = 'What is the flag of %s?' % question.choices[question.correct_answer].name
+        # client hack
+        q = question.choices[question.correct_answer].name
         img_data = ''
         return dict(question=dict(type='text', data=q), answers=[dict(type='image', data=load_flag(c.country_code)) for c in question.choices])
 
@@ -75,7 +80,9 @@ class Capital2CountryGenerator(BaseQuestionGenerator):
     def view(self, question):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
-        q = '%s is the capital of...' % question.choices[question.correct_answer].capital
+        #q = '%s is the capital of...' % question.choices[question.correct_answer].capital
+        # client hack
+        q = question.choices[question.correct_answer].capital
         return dict(question=dict(type='text', data=q), answers=[dict(type='text', data=c.name) for c in question.choices])
 
 class Country2CapitalGenerator(BaseQuestionGenerator):
@@ -88,7 +95,9 @@ class Country2CapitalGenerator(BaseQuestionGenerator):
     def view(self, question):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
-        q = 'What is the capital of %s?' % question.choices[question.correct_answer].name
+        # q = 'What is the capital of %s?' % question.choices[question.correct_answer].name
+        # client hack
+        q = question.choices[question.correct_answer].name
         return dict(question=dict(type='text', data=q), answers=[dict(type='text', data=c.capital) for c in question.choices])
 
 generators = {
