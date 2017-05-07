@@ -35,7 +35,7 @@ def post_new_game():
         else:
             game_type = 'mixed'
 
-        game = Game(continent, language, 32, game_type)
+        game = Game(continent, language, request.json['question_count'], game_type)
         game.next_question()
         db.session.add(game)
         db.session.commit()
@@ -72,13 +72,21 @@ def get_game_question(id):
 def post_game_answer(id):
     try:
         game = db.session.query(Game).filter(Game.hashed_id == id).one()
+        # end of game
+        if (game.current_question == None):
+            res = jsonify({'status': 303, 'message': 'No more questions for this game'})
+            res.status_code = 303
+            return res
         data, errors = answer_schema.load(request.get_json())
         answer = data['answer']
         # hopefully no race condition here
         if (game.current_question.validate(answer)):
             game.value += 10
         res = dict(recorded_answer=answer, correct_answer=game.current_question.correct_answer, current_score=game.value)
-        game.next_question()
+        if (game.question_id >= game.question_count):
+            game.current_question = None
+        else:
+            game.next_question()
         db.session.commit()
         return answer_response_schema.jsonify(res)
     except MultipleResultsFound, e:

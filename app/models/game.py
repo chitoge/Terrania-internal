@@ -71,6 +71,7 @@ class Game(db.Model):
     def next_question(self):
         # if we generated enough questions then stop
         if (self.question_id >= self.question_count):
+            self.current_question = None
             return
         # generate candidate list on-the-fly to reduce storage cost
         if (self.continent == 'all'):
