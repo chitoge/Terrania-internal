@@ -24,6 +24,13 @@
   <ItemGroup>
     <Compile Include="app\api_v1\game.py" />
     <Compile Include="app\api_v1\__init__.py" />
+    <Compile Include="app\core\questions.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="app\core\question_generators.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="app\core\__init__.py" />
     <Compile Include="app\models\game.py" />
     <Compile Include="app\models\__init__.py" />
     <Compile Include="app\schemas\game.py" />
@@ -36,6 +43,7 @@
   <ItemGroup>
     <Folder Include="app" />
     <Folder Include="app\api_v1" />
+    <Folder Include="app\core\" />
     <Folder Include="app\models" />
     <Folder Include="app\schemas" />
     <Folder Include="tests" />
