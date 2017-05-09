@@ -21,6 +21,7 @@ def create_app(config_name):
     from .api_v1 import api as api_v1_blueprint
     app.register_blueprint(api_v1_blueprint, url_prefix='/api')
 
+    @app.errorhandler(Exception)
     def make_json_error(ex):
         return_code = (ex.code
                         if isinstance(ex, HTTPException)
@@ -28,8 +29,5 @@ def create_app(config_name):
         response = jsonify(status=return_code, message=str(ex))
         response.status_code = return_code
         return response
-
-    for code in default_exceptions.iterkeys():
-        app.error_handler_spec[None][code] = make_json_error
 
     return app
