@@ -5,7 +5,7 @@ from ..models.i18n import Translation
 
 def load_flag(country):
     # don't LFI me!
-    with f as open('data/flags/%s.png' % country.lower()):
+    with open('data/flags/%s.png' % country.lower()) as f:
         # return PNG Base64
         return f.read().encode('base64')
 
