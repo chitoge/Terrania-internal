@@ -23,7 +23,7 @@ def post_new_game():
         if ('continent' in request.json):
             continent = request.json['continent']
         else:
-            continent = 'all'
+            continent = 'World'
 
         if ('language' in request.json):
             language = request.json['language']
@@ -33,7 +33,7 @@ def post_new_game():
         if ('type' in request.json):
             game_type = request.json['type']
         else:
-            game_type = 'mixed'
+            game_type = 'flag2country'
 
         game = Game(continent, language, request.json['question_count'], game_type)
         game.next_question()

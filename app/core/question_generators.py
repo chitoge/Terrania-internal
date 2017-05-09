@@ -4,7 +4,10 @@ import random
 from ..models.i18n import Translation
 
 def load_flag(country):
-    return ''
+    # don't LFI me!
+    with f as open('data/flags/%s.png' % country.lower()):
+        # return PNG Base64
+        return f.read().encode('base64')
 
 class RandomMultiChoiceGenerator:
     def __init__(self, previous_answers, candidates, language, data_tag, generator_tag, answer_gen_fn):

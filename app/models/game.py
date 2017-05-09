@@ -76,7 +76,7 @@ class Game(db.Model):
             self.current_question = None
             return
         # generate candidate list on-the-fly to reduce storage cost
-        if (self.continent == 'all'):
+        if (self.continent == 'World'):
             candidates = db.session.query(Country)
         else:
             candidates = db.session.query(Country).filter(Country.region == self.continent)
