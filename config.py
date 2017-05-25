@@ -24,9 +24,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'APP_TESTING_DATABASE_URI'
-    )
+    SQLALCHEMY_DATABASE_URI = 'sqlite://:memory:'
 
 
 config = {

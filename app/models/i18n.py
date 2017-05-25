@@ -3,6 +3,7 @@
 class Translation(db.Model):
     __tablename__ = 'translations'
     id = db.Column(db.Integer, primary_key=True)
+    # a dictionary of translations, seems like broken normal form, right?
     translations = db.Column(db.PickleType)
 
     def __repr__(self):
@@ -15,6 +16,12 @@ class Translation(db.Model):
         return self.translations[language]
 
     def __init__(self, trans):
+        # check if given translations arg a dictionary
+        if not (isinstance(trans, dict)):
+            raise TypeError('Translations must be stored in a dict')
+        # check for mandatory English translation
+        if not ('en' in trans):
+            raise TypeError("English translation is required but couldn't be found")
         self.translations = trans
 
     @staticmethod

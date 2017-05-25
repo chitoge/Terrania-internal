@@ -13,4 +13,3 @@ def import_country_data(filename, db):
             country = Country(name, row['region'], row['country_code'], row['latitude'], row['longitude'], capital, row['population'], row['area'], row['coastline'], row['currency'].decode('utf8'), row['dialling_prefix'], row['birth_rate'], row['death_rate'], row['life_expectancy'])
             db.session.add_all([name, capital, country])
             db.session.commit()
-            print country

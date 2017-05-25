@@ -21,7 +21,13 @@ class RandomMultiChoiceGenerator:
             to_be_removed = filter(lambda x: x[1] == data_tag, previous_answers)
         else:
             to_be_removed = []
-        self.candidates = list(set(candidates) - set(to_be_removed))
+        to_be_removed = set(x[0] for x in to_be_removed)
+        # wish it could be simpler
+        new_candidates = []
+        for candidate in candidates:
+            if (candidate.country_code not in to_be_removed):
+                new_candidates.append(candidate)
+        self.candidates = new_candidates
 
     def generate(self):
         # if there are less than 4 candidates left, we deny the request
@@ -50,7 +56,7 @@ class Flag2CountryGenerator(BaseQuestionGenerator):
     def generate(self):
         return self.generator.generate()
 
-    def view(self, question):
+    def view(self, question, overrides):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
         q = 'What country is this flag from?'
@@ -64,7 +70,7 @@ class Country2FlagGenerator(BaseQuestionGenerator):
     def generate(self):
         return self.generator.generate()
 
-    def view(self, question):
+    def view(self, question, overrides):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
         #q = 'What is the flag of %s?' % question.choices[question.correct_answer].name
@@ -80,7 +86,7 @@ class Capital2CountryGenerator(BaseQuestionGenerator):
     def generate(self):
         return self.generator.generate()
 
-    def view(self, question):
+    def view(self, question, overrides):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
         #q = '%s is the capital of...' % question.choices[question.correct_answer].capital
@@ -95,7 +101,7 @@ class Country2CapitalGenerator(BaseQuestionGenerator):
     def generate(self):
         return self.generator.generate()
 
-    def view(self, question):
+    def view(self, question, overrides):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
         # q = 'What is the capital of %s?' % question.choices[question.correct_answer].name
@@ -103,9 +109,29 @@ class Country2CapitalGenerator(BaseQuestionGenerator):
         q = question.choices[question.correct_answer].name
         return dict(question=dict(type='text', data=q), answers=[dict(type='text', data=c.capital) for c in question.choices])
 
+class MixedQuestionsGenerator(BaseQuestionGenerator):
+    def __init__(self, used_list, candidates, language):
+        self.used_list = used_list
+        self.candidates = candidates
+        self.language = language
+        # randomly choose from available generators
+        possible_generators = list(set(generators.values()) + set(private_generators) - set([MixedQuestionsGenerator]))
+        self.generator = random.choice(possible_generators)(self.used_list, self.candidates, self.language)
+
+    def generate(self):
+        return self.generator.generate()
+
+    def view(self, question):
+        return self.generator.view(question)
+
 generators = {
     'flag2country': Flag2CountryGenerator,
     'country2flag': Country2FlagGenerator,
     'capital2country': Capital2CountryGenerator,
     'country2capital': Country2CapitalGenerator,
+
+    # mix 'em all!
+    'mixed': MixedQuestionsGenerator
 }
+
+private_generators = []
