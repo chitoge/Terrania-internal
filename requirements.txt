@@ -4,6 +4,7 @@ Flask==0.12.1
 flask-marshmallow==0.7.0
 Flask-Script==2.0.5
 Flask-SQLAlchemy==2.2
+Flask-Testing
 itsdangerous==0.24
 Jinja2==2.9.6
 MarkupSafe==1.0

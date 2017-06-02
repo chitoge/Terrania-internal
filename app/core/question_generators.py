@@ -56,7 +56,8 @@ class Flag2CountryGenerator(BaseQuestionGenerator):
     def generate(self):
         return self.generator.generate()
 
-    def view(self, question, overrides):
+    def view(self, question, overrides=False):
+        # overriding doesn't matter here!
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
         q = 'What country is this flag from?'
@@ -70,7 +71,7 @@ class Country2FlagGenerator(BaseQuestionGenerator):
     def generate(self):
         return self.generator.generate()
 
-    def view(self, question, overrides):
+    def view(self, question, overrides=False):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
         #q = 'What is the flag of %s?' % question.choices[question.correct_answer].name
@@ -86,7 +87,7 @@ class Capital2CountryGenerator(BaseQuestionGenerator):
     def generate(self):
         return self.generator.generate()
 
-    def view(self, question, overrides):
+    def view(self, question, overrides=False):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
         #q = '%s is the capital of...' % question.choices[question.correct_answer].capital
@@ -101,7 +102,7 @@ class Country2CapitalGenerator(BaseQuestionGenerator):
     def generate(self):
         return self.generator.generate()
 
-    def view(self, question, overrides):
+    def view(self, question, overrides=False):
         self.generator.check_generator_view_tag(question)
         # TODO: apply i18n & load image
         # q = 'What is the capital of %s?' % question.choices[question.correct_answer].name
@@ -115,14 +116,24 @@ class MixedQuestionsGenerator(BaseQuestionGenerator):
         self.candidates = candidates
         self.language = language
         # randomly choose from available generators
-        possible_generators = list(set(generators.values()) + set(private_generators) - set([MixedQuestionsGenerator]))
+        possible_generators = list((set(generators.values()) | set(private_generators)) - set([MixedQuestionsGenerator]))
         self.generator = random.choice(possible_generators)(self.used_list, self.candidates, self.language)
 
     def generate(self):
-        return self.generator.generate()
+        question, data_tag = self.generator.generate()
+        # will insert an attribute for its original generator
+        # stored as name
+        for g_name in generators:
+            if (isinstance(self.generator, generators[g_name])):
+                setattr(question, 'generator_name', g_name)
+                break
+        if (not hasattr(question, 'generator_name')):
+            raise TypeError("Can't find a generator name associated to given generator")
+        return question, data_tag
 
     def view(self, question):
-        return self.generator.view(question)
+        # restore 
+        return generators[question.generator_name]([], [], self.language).view(question)
 
 generators = {
     'flag2country': Flag2CountryGenerator,

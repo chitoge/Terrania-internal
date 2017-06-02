@@ -30,7 +30,7 @@ def create_app(config_name):
     from .api_v1 import api as api_v1_blueprint
     app.register_blueprint(api_v1_blueprint, url_prefix='/api')
 
-    app.errorhandler(Exception)(make_json_error)
-    app.errorhandler(HTTPException)(make_json_error)
+    #app.errorhandler(Exception)(make_json_error)
+    #app.errorhandler(HTTPException)(make_json_error)
 
     return app

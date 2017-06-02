@@ -1,9 +1,17 @@
 ﻿from .. import ma
 from ..models.game import Game
-from marshmallow import fields, validates
+from marshmallow import fields, validates, ValidationError
+from marshmallow.validate import Range, OneOf
+from ..core.question_generators import generators
 
 class GameSchema(ma.Schema):
     hashed_id = fields.Str()
+
+class GameRequestSchema(ma.Schema):
+    type = fields.Str(required=True, validate=OneOf(generators))
+    question_count = fields.Int(required=True, validate=Range(min=0))
+    language = fields.Str(default='en')
+    continent = fields.Str(default='World')
 
 class DataTypeSchema(ma.Schema):
     type = fields.Str(required=True)
@@ -15,12 +23,7 @@ class QuestionSchema(ma.Schema):
     answers = fields.Nested(DataTypeSchema, many=True)
 
 class AnswerSchema(ma.Schema):
-    answer = fields.Int(required=True)
-
-    @validates('answer')
-    def validate_answer_range(self, value):
-        if (value < 0) or (value > 3):
-            raise TypeError('Invalid answer value.')
+    answer = fields.Int(required=True, validate=Range(min=0, max=3))
 
 class AnswerResponseSchema(ma.Schema):
     recorded_answer = fields.Int()
@@ -32,3 +35,4 @@ games_schema = GameSchema(many=True)
 question_schema = QuestionSchema()
 answer_schema = AnswerSchema()
 answer_response_schema = AnswerResponseSchema()
+game_request_schema = GameRequestSchema()
