@@ -20,7 +20,7 @@ class OrdinaryPlayTest(TestCase):
 
     def runTest(self):
         # randomly choose a game mode, with 10 questions, for whole world, in English
-        chosen_game_type = 'mixed' #random.choice(list(generators))
+        chosen_game_type = random.choice(list(generators))
         print '[+] Chosen game type to test = {}'.format(chosen_game_type) 
         payload = json.dumps({'continent': 'World', 'question_count': 10, 'type': chosen_game_type, 'language': 'en'})
         resp = self.client.post('/api/games/new', content_type='application/json', data=payload)
