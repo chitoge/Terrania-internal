@@ -62,7 +62,7 @@ class Flag2CountryGenerator(BaseQuestionGenerator):
         # TODO: apply i18n & load image
         q = 'What country is this flag from?'
         img_data = load_flag(question.choices[question.correct_answer].country_code)
-        return dict(question=dict(type='captioned_image', data=img_data, title=q), answers=[dict(type='text', data=s.name) for s in question.choices])
+        return dict(question=dict(type='captioned_image', data=img_data, title=q), answers=[dict(type='text', data=s.name) for s in question.choices], question_type='flag2country')
 
 class Country2FlagGenerator(BaseQuestionGenerator):
     def __init__(self, used_list, candidates, language):
@@ -78,7 +78,7 @@ class Country2FlagGenerator(BaseQuestionGenerator):
         # client hack
         q = question.choices[question.correct_answer].name
         img_data = ''
-        return dict(question=dict(type='text', data=q), answers=[dict(type='image', data=load_flag(c.country_code)) for c in question.choices])
+        return dict(question=dict(type='text', data=q), answers=[dict(type='image', data=load_flag(c.country_code)) for c in question.choices], question_type='country2flag')
 
 class Capital2CountryGenerator(BaseQuestionGenerator):
     def __init__(self, used_list, candidates, language):
@@ -93,7 +93,7 @@ class Capital2CountryGenerator(BaseQuestionGenerator):
         #q = '%s is the capital of...' % question.choices[question.correct_answer].capital
         # client hack
         q = question.choices[question.correct_answer].capital
-        return dict(question=dict(type='text', data=q), answers=[dict(type='text', data=c.name) for c in question.choices])
+        return dict(question=dict(type='text', data=q), answers=[dict(type='text', data=c.name) for c in question.choices], question_type='capital2country')
 
 class Country2CapitalGenerator(BaseQuestionGenerator):
     def __init__(self, used_list, candidates, language):
@@ -108,7 +108,7 @@ class Country2CapitalGenerator(BaseQuestionGenerator):
         # q = 'What is the capital of %s?' % question.choices[question.correct_answer].name
         # client hack
         q = question.choices[question.correct_answer].name
-        return dict(question=dict(type='text', data=q), answers=[dict(type='text', data=c.capital) for c in question.choices])
+        return dict(question=dict(type='text', data=q), answers=[dict(type='text', data=c.capital) for c in question.choices], question_type='country2capital')
 
 class MixedQuestionsGenerator(BaseQuestionGenerator):
     def __init__(self, used_list, candidates, language):

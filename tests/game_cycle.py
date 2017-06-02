@@ -33,6 +33,8 @@ class OrdinaryPlayTest(TestCase):
             # check question format
             self.assertIn(u'question', resp.json)
             self.assertIn(u'answers', resp.json)
+            # expect question type specified in response
+            self.assertIn(u'question_type', resp.json)
             self.assertEquals(len(resp.json['answers']), 4)
             # another request should not change the question if the client did not respond
             another_resp = self.client.get('/api/games/{}/question'.format(game_id))

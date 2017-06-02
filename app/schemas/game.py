@@ -21,6 +21,7 @@ class DataTypeSchema(ma.Schema):
 class QuestionSchema(ma.Schema):
     question = fields.Nested(DataTypeSchema)
     answers = fields.Nested(DataTypeSchema, many=True)
+    question_type = fields.Str(required=True)
 
 class AnswerSchema(ma.Schema):
     answer = fields.Int(required=True, validate=Range(min=0, max=3))
