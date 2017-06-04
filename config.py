@@ -12,11 +12,11 @@ class Config(object):
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'APP_PRODUCTION_DATABASE_URI'
-    )
+    ) or 'sqlite:///./prod.sqlite'
 
 
 class DevelopmentConfig(Config):
-    DEBUG = False
+    DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'APP_DEVELOPMENT_DATABASE_URI'
     ) or 'sqlite:///./dev.sqlite'
@@ -31,5 +31,5 @@ config = {
     'production': ProductionConfig,
     'development': DevelopmentConfig,
     'testing': TestingConfig,
-    'default': TestingConfig,
+    'default': ProductionConfig,
 }
