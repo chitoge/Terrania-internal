@@ -82,5 +82,5 @@ class Game(db.Model):
             candidates = db.session.query(Country).filter(Country.region == self.continent)
         generator = generators[self.game_type](self.past_countries, candidates, self.language)
         self.current_question, data_tag = generator.generate()
-        self.past_countries.append((self.current_question.choices[self.current_question.correct_answer].country_code, data_tag))
+        self.past_countries = self.past_countries + [(self.current_question.choices[self.current_question.correct_answer].country_code, data_tag)]
         self.question_id += 1
